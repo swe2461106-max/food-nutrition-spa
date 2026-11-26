@@ -1,0 +1,47 @@
+[
+  {
+    "id": "MN-001",
+    "group_mn": "Сүү, сүүн бүтээгдэхүүн",
+    "group_en": "Milk and dairy products",
+    "name_mn": "Үнээний түүхий сүү",
+    "name_en": "Cow's raw milk",
+    "image": "images/khoormog.jpg",
+    "energy_kcal": 61,
+    "protein_g": 3.2,
+    "fat_g": 3.3,
+    "carb_g": 4.8,
+    "calcium_mg": 113,
+    "iron_mg": 0.1,
+    "vit_c_mg": 1.0
+  },
+  {
+    "id": "MN-002",
+    "group_mn": "Мах, махан бүтээгдэхүүн",
+    "group_en": "Meat and meat products",
+    "name_mn": "Үхрийн цул мах",
+    "name_en": "Beef lean meat",
+    "image": "images/khoormog.jpg",
+    "energy_kcal": 187,
+    "protein_g": 19.4,
+    "fat_g": 11.8,
+    "carb_g": 0.0,
+    "calcium_mg": 9,
+    "iron_mg": 2.6,
+    "vit_c_mg": 0.0
+  },
+  {
+    "id": "MN-100",
+    "group_mn": "Сүү, сүүн бүтээгдэхүүн",
+    "group_en": "Milk and dairy products",
+    "name_mn": "Ингэний хоормог (Өөрийн нэмсэн дээж)",
+    "name_en": "Fermented camel milk (Custom sample)",
+    "image": "images/khoormog.jpg",
+    "energy_kcal": 68,
+    "protein_g": 3.4,
+    "fat_g": 4.1,
+    "carb_g": 4.5,
+    "calcium_mg": 135,
+    "iron_mg": 0.3,
+    "vit_c_mg": 2.8
+  }
+]
