@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Хүнсний найрлагын мэдээллийн сан - SPA</title>
+  <!-- React болон Babel сангууд (Жишээ 2.1: Орчин бэлтгэх) -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #0768f8; margin: 0; padding: 20px; }
+    .container { max-width: 900px; margin: auto; background: #f80b0b; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; margin-bottom: 20px; }
+    header h1 { color: #2e7d32; font-size: 22px; margin: 0; }
+    .student-badge { background: #e8f5e9; color: #1b5e20; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+    .controls { display: flex; gap: 10px; margin-bottom: 20px; }
+    input, select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; flex: 1; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background-color: #2e7d32; color: white; }
+    tr:hover { background-color: #f1f8e9; cursor: pointer; }
+    .selected-box { background: #e8f5e9; padding: 15px; border-radius: 8px; border-left: 5px solid #2e7d32; }
+    .btn-add { background: #2e7d32; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+    .btn-add:hover { background: #1b5e20; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    // Жишээ 2.2: Хүнсний найрлагын мэдээллийн сан (JSON өгөгдөл)
+    const FOOD_DATABASE = [
+      { id: 1, name: "Үхрийн мах (тураг)", category: "Мах", kcal: 250, protein: 26.0, fat: 15.0, carbs: 0.0 },
+      { id: 2, name: "Тахианы цээж мах", category: "Мах", kcal: 165, protein: 31.0, fat: 3.6, carbs: 0.0 },
+      { id: 3, name: "Алим", category: "Жимс", kcal: 52, protein: 0.3, fat: 0.2, carbs: 14.0 },
+      { id: 4, name: "Гадил (Банана)", category: "Жимс", kcal: 89, protein: 1.1, fat: 0.3, carbs: 23.0 },
+      { id: 5, name: "Лууван", category: "Хүнсний ногоо", kcal: 41, protein: 0.9, fat: 0.2, carbs: 10.0 },
+      { id: 6, name: "Төмс", category: "Хүнсний ногоо", kcal: 77, protein: 2.0, fat: 0.1, carbs: 17.0 },
+      { id: 7, name: "Цагаан будаа (чанасан)", category: "Үр тариа", kcal: 130, protein: 2.7, fat: 0.3, carbs: 28.0 },
+      { id: 8, name: "Өндөг (чанасан)", category: "Сүү, өндөг", kcal: 155, protein: 13.0, fat: 11.0, carbs: 1.1 }
+    ];
+
+    // Жишээ 2.3: Нэгж хүнсний мөрийг харуулах дэд компонент (Props ашиглах)
+    function FoodRow({ food, onSelect }) {
+      return (
+        <tr onClick={() => onSelect(food)}>
+          <td><strong>{food.name}</strong></td>
+          <td>{food.category}</td>
+          <td>{food.kcal} ккал</td>
+          <td>{food.protein} г</td>
+          <td>{food.fat} г</td>
+          <td>{food.carbs} г</td>
+          <td><button className="btn-add" onClick={(e) => { e.stopPropagation(); onSelect(food); }}>Сонгох</button></td>
+        </tr>
+      );
+    }
+
+    // Үндсэн SPA Компонент
+    function FoodApp() {
+      // Жишээ 2.4: Хайлт болон шүүлтүүрийн төлөв (State)
+      const [searchTerm, setSearchTerm] = useState("");
+      const [selectedCategory, setSelectedCategory] = useState("Бүгд");
+      
+      // Жишээ 2.5: Сонгосон хүнсний жагсаалт ба илчлэг тооцоолох төлөв
+      const [selectedFoods, setSelectedFoods] = useState([]);
+
+      // Хайлт болон ангиллаар шүүх логик
+      const filteredFoods = FOOD_DATABASE.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = selectedCategory === "Бүгд" || item.category === selectedCategory;
+        return matchesSearch && matchesCategory;
+      });
+
+      // Хүнс нэмэх функц
+      const handleSelectFood = (food) => {
+        setSelectedFoods([...selectedFoods, food]);
+      };
+
+      // Жагсаалтыг цэвэрлэх
+      const handleClear = () => setSelectedFoods([]);
+
+      // Нийт илчлэг, уураг тооцоолох
+      const totalKcal = selectedFoods.reduce((sum, item) => sum + item.kcal, 0);
+      const totalProtein = selectedFoods.reduce((sum, item) => sum + item.protein, 0).toFixed(1);
+
+      return (
+        <div className="container">
+          <header>
+            <h1>🥗 Хүнсний найрлагын мэдээллийн сан (SPA)</h1>
+            {/* swe2461106 Тэмүүжин */}
+            <div className="student-badge">Гүйцэтгэсэн: Тэмүүжин (swe2461106)</div>
+          </header>
+
+          {/* Жишээ 2.4: Хайлт ба шүүлтүүр */}
+          <div className="controls">
+            <input 
+              type="text" 
+              placeholder="Хүнсний нэрээр хайх (жишээ нь: Алим, Мах)..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+              <option value="Бүгд">Бүх ангилал</option>
+              <option value="Мах">Мах</option>
+              <option value="Жимс">Жимс</option>
+              <option value="Хүнсний ногоо">Хүнсний ногоо</option>
+              <option value="Үр тариа">Үр тариа</option>
+              <option value="Сүү, өндөг">Сүү, өндөг</option>
+            </select>
+          </div>
+
+          {/* Хүнсний жагсаалтын хүснэгт */}
+          <table>
+            <thead>
+              <tr>
+                <th>Хүнсний нэр (100г)</th>
+                <th>Ангилал</th>
+                <th>Илчлэг</th>
+                <th>Уураг</th>
+                <th>Өөх тос</th>
+                <th>Нүүрс ус</th>
+                <th>Үйлдэл</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredFoods.length > 0 ? (
+                filteredFoods.map(food => (
+                  <FoodRow key={food.id} food={food} onSelect={handleSelectFood} />
+                ))
+              ) : (
+                <tr><td colSpan="7" style={{textAlign: "center"}}>Хайлтад тохирох хүнс олдсонгүй.</td></tr>
+              )}
+            </tbody>
+          </table>
+
+          {/* Жишээ 2.5: Сонгосон хүнсний тооцоолол */}
+          <div className="selected-box">
+            <h3>📋 Сонгосон хүнсний нийт шим тэжээл ({selectedFoods.length} ширхэг)</h3>
+            <p>
+              {selectedFoods.length === 0 
+                ? "Дээрх хүснэгтээс хүнс сонгож илчлэгээ тооцоолно уу." 
+                : selectedFoods.map(f => f.name).join(", ")}
+            </p>
+            <p><strong>Нийт илчлэг:</strong> {totalKcal} ккал | <strong>Нийт уураг:</strong> {totalProtein} г</p>
+            {selectedFoods.length > 0 && (
+              <button className="btn-add" style={{background: "#c62828"}} onClick={handleClear}>Цэвэрлэх</button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<FoodApp />);
+  </script>
+</body>
+</html>
