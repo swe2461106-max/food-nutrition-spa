@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Хүнсний найрлагын мэдээллийн сан - SPA</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Хүнсний найрлагын мэдээллийн сан SPA</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
-<body>
-  <!-- Хэл солих жижиг цэс -->
+<body class="has-background-white-ter">
   <nav class="navbar is-primary" role="navigation">
     <div class="container">
       <div class="navbar-brand">
-        <a class="navbar-item has-text-weight-bold" href="#">🇲🇳 Монгол Хүнсний Найрлага</a>
+        <a class="navbar-item has-text-weight-bold is-size-5" href="#search">
+          MN Монгол Хүнсний Найрлага
+        </a>
       </div>
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <div class="buttons">
-            <button id="btn-mn" class="button is-small is-light">Монгол</button>
-            <button id="btn-en" class="button is-small is-dark">English</button>
+      <div class="navbar-menu is-active">
+        <div class="navbar-start">
+          <a id="nav-search" class="navbar-item is-active" href="#search">Хайлт</a>
+          <a id="nav-compare" class="navbar-item" href="#compare">Харьцуулалт</a>
+        </div>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <button id="btn-mn" class="button is-small is-white">Монгол</button>
+              <button id="btn-en" class="button is-small is-dark">English</button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- SPA хуудас зурагдах үндсэн хэсэг -->
-  <main id="app"></main>
+  <main id="app-root"></main>
 
   <script type="module" src="./js/main.js"></script>
 </body>
